@@ -124,7 +124,7 @@ python profile_llm.py
 
 6、roofline图像
 
-![9](./images/image9.png)
+![18](./images/image18.png)
 ![14](./images/image14.png)
 
 为什么画出的图像图线不是从原点开始的？
@@ -197,3 +197,23 @@ python profile_llm.py
 - 表1最右侧显示的是 Total KFLOPs。
 - 表2最右侧显示的是 Total FLOPs。
 - 这也印证了 PyTorch Profiler 在不同版本间对大数值显示的格式调整。
+
+8、qwen1.5-0.5B与qwen1.5-1.8B对比分析
+
+（1）为什么1.8B的参数量多了，但是CPU时间少了
+
+CPU 时间的长短往往取决于算子的数量（Launch 频率），而不是单个算子内部的计算量（那是 GPU 的事），对于1.8B模型，CPU有时间再GPU计算的时候去下发指令，所以GPU在一定程度上掩盖了CPU的时间，所以参数量更大的表现的CPU时间反而更小
+
+（2）数据对比
+
+![19](./images/image19.png)
+
+![20](./images/image20.png)
+![21](./images/image21.png)
+![22](./images/image22.png)
+![23](./images/image23.png)
+
+广播机制：当两个形状不完全相同的张量进行数学运算时，系统会自动在逻辑上把较小的张量“复制”或“扩展”，使其形状与较大的张量对齐，然后再进行运算。
+
+![24](./images/image24.png)
+
